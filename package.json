@@ -1,0 +1,8 @@
+{
+  "name": "hardware-of-legends",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

@@ -1,2 +1,3 @@
-# TpFinal-appweb
-Suban code
+# hardware-of-Legends
+
+Estructura base del proyecto (frontend + backend).
