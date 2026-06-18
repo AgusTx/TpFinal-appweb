@@ -1,4 +1,5 @@
 import express from 'express';
+import { register, login } from './controllers/auth.controller';
 
 const app = express();
 app.use(express.json());
@@ -7,14 +8,9 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Auth routes (stubs)
-app.post('/auth/register', (_req, res) => {
-  res.status(501).json({ message: 'Not implemented' });
-});
-
-app.post('/auth/login', (_req, res) => {
-  res.status(501).json({ message: 'Not implemented' });
-});
+// Auth routes (implemented via controller)
+app.post('/auth/register', register);
+app.post('/auth/login', login);
 
 // Products routes (basic skeleton)
 app.get('/products', (_req, res) => {
