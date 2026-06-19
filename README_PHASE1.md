@@ -47,6 +47,13 @@ npm run dev
 
 Por defecto el frontend usa `API_URL` desde entorno o `http://localhost:4000`.
 
+## Justificación de Prisma
+- Elegimos Prisma porque es un ORM moderno que facilita el modelado de datos y la evolución del esquema.
+- Prisma permite definir modelos con un solo archivo `schema.prisma`, lo cual es ideal para un proyecto que busca demostrar arquitectura y estructura de carpetas.
+- Facilita la generación de cliente y el uso de tipos en TypeScript, reduciendo el código "boilerplate" y mejorando la seguridad de tipos.
+- Para la fase inicial usamos SQLite local como base de datos de desarrollo, lo que permite probar el backend sin necesidad de configurar un servidor de base de datos complejo.
+- En una etapa posterior, la misma configuración se puede migrar fácilmente a Postgres, MySQL o cualquier otro proveedor compatible con Prisma.
+
 ## Siguientes pasos recomendados
 - Completar modelos/DTOs (`User`, `Product`, `Order`) en `shared/` o `backend/modules/*`.
 - Añadir conexión Prisma/DB real cuando se decida persistencia.
