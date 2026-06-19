@@ -1,18 +1,16 @@
 import Link from 'next/link';
+import { fetchProducts } from '../../services/api';
 
-export default function ProductsPage(){
-  const sample = [
-    { id: 'sample-1', name: 'Sample Product A' },
-    { id: 'sample-2', name: 'Sample Product B' }
-  ];
+export default async function ProductsPage(){
+  const products = await fetchProducts();
 
   return (
     <div>
       <h1>Listado de productos</h1>
       <ul>
-        {sample.map(p => (
+        {products.map((p: { id: string; name: string; price: number }) => (
           <li key={p.id}>
-            <Link href={`/products/${p.id}`}>{p.name}</Link>
+            <Link href={`/products/${p.id}`}>{p.name} - ${p.price}</Link>
           </li>
         ))}
       </ul>
