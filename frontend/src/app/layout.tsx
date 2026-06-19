@@ -1,3 +1,4 @@
+import './globals.css';
 import Header from '../components/Header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -5,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="es">
       <body>
         <Header />
-        <main style={{padding:16}}>{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

@@ -91,4 +91,6 @@ En esta fase inicial se utiliza SQLite local para mantener la instalación simpl
 
 ## Notas
 
-Este README se complementa con `README_PHASE1.md`, que documenta la propuesta de arquitectura y la justificación de diseño de Fase 1.
+Este README se complementa con:
+- `README_PHASE1.md`, que documenta la propuesta de arquitectura y la justificación de diseño de Fase 1.
+- `README_PHASE2.md`, que describe el plan de evolución y mejoras para la siguiente fase del proyecto.
