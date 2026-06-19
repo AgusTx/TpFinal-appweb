@@ -17,14 +17,61 @@ app.post('/auth/register', register);
 app.post('/auth/login', login);
 
 // Products routes (basic skeleton)
-app.get('/products', (_req: express.Request, res: express.Response) => {
-  res.json([
-    { id: 'sample-1', name: 'Sample Product', price: 0 }
-  ]);
+const products = [
+  { id: 'sample-1', name: 'Mouse Gamer', price: 1299, category: 'accesorios' },
+  { id: 'sample-2', name: 'Teclado Mecánico', price: 2599, category: 'accesorios' },
+  { id: 'sample-3', name: 'Monitor 24"', price: 3999, category: 'pantallas' },
+  { id: 'sample-4', name: 'Auriculares RGB', price: 1899, category: 'audio' }
+];
+
+app.get('/products', (req: express.Request, res: express.Response) => {
+  const { q, category, minPrice, maxPrice } = req.query;
+  let result = [...products];
+
+  if (typeof q === 'string' && q.trim().length > 0) {
+    const term = q.toLowerCase();
+    result = result.filter((product) =>
+      product.name.toLowerCase().includes(term) ||
+      product.category.toLowerCase().includes(term)
+    );
+  }
+
+  if (typeof category === 'string' && category.trim().length > 0) {
+    result = result.filter((product) => product.category.toLowerCase() === category.toLowerCase());
+  }
+
+  const min = Number(minPrice);
+  if (!Number.isNaN(min)) {
+    result = result.filter((product) => product.price >= min);
+  }
+
+  const max = Number(maxPrice);
+  if (!Number.isNaN(max)) {
+    result = result.filter((product) => product.price <= max);
+  }
+
+  res.json(result);
+});
+
+app.post('/products', (req: express.Request, res: express.Response) => {
+  const { name, price, category } = req.body as { name?: string; price?: number; category?: string };
+
+  if (!name || typeof price !== 'number' || !category) {
+    return res.status(400).json({ message: 'name, price and category are required' });
+  }
+
+  const id = `product-${Date.now()}`;
+  const newProduct = { id, name, price, category };
+  products.push(newProduct);
+  return res.status(201).json(newProduct);
 });
 
 app.get('/products/:id', (req: express.Request, res: express.Response) => {
-  res.json({ id: req.params.id, name: 'Sample Product', price: 0 });
+  const product = products.find((item) => item.id === req.params.id);
+  if (!product) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+  res.json(product);
 });
 
 // Orders routes (stubs)
