@@ -17,6 +17,7 @@ app.post('/auth/register', register);
 app.post('/auth/login', login);
 
 // Products routes (basic skeleton)
+const categories = ['accesorios', 'pantallas', 'audio'];
 const products = [
   { id: 'sample-1', name: 'Mouse Gamer', price: 1299, category: 'accesorios' },
   { id: 'sample-2', name: 'Teclado Mecánico', price: 2599, category: 'accesorios' },
@@ -53,17 +54,69 @@ app.get('/products', (req: express.Request, res: express.Response) => {
   res.json(result);
 });
 
+app.get('/categories', (_req: express.Request, res: express.Response) => {
+  res.json(categories);
+});
+
 app.post('/products', (req: express.Request, res: express.Response) => {
   const { name, price, category } = req.body as { name?: string; price?: number; category?: string };
+  const errors: string[] = [];
 
-  if (!name || typeof price !== 'number' || !category) {
-    return res.status(400).json({ message: 'name, price and category are required' });
+  if (!name || typeof name !== 'string' || name.trim().length < 3) {
+    errors.push('name must be at least 3 characters');
+  }
+  if (typeof price !== 'number' || price <= 0) {
+    errors.push('price must be a positive number');
+  }
+  if (!category || typeof category !== 'string' || !categories.includes(category.toLowerCase())) {
+    errors.push(`category must be one of: ${categories.join(', ')}`);
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Validation failed', errors });
   }
 
   const id = `product-${Date.now()}`;
-  const newProduct = { id, name, price, category };
+  const validatedName = name!.trim();
+  const validatedPrice = price as number;
+  const validatedCategory = category!.toLowerCase();
+  const newProduct = { id, name: validatedName, price: validatedPrice, category: validatedCategory };
   products.push(newProduct);
   return res.status(201).json(newProduct);
+});
+
+app.put('/products/:id', (req: express.Request, res: express.Response) => {
+  const { name, price, category } = req.body as { name?: string; price?: number; category?: string };
+  const productIndex = products.findIndex((item) => item.id === req.params.id);
+
+  if (productIndex === -1) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+
+  const errors: string[] = [];
+  if (!name || typeof name !== 'string' || name.trim().length < 3) {
+    errors.push('name must be at least 3 characters');
+  }
+  if (typeof price !== 'number' || price <= 0) {
+    errors.push('price must be a positive number');
+  }
+  if (!category || typeof category !== 'string' || !categories.includes(category.toLowerCase())) {
+    errors.push(`category must be one of: ${categories.join(', ')}`);
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Validation failed', errors });
+  }
+
+  const updatedProduct = {
+    ...products[productIndex],
+    name: name!.trim(),
+    price: price as number,
+    category: category!.toLowerCase(),
+  };
+
+  products[productIndex] = updatedProduct;
+  return res.json(updatedProduct);
 });
 
 app.get('/products/:id', (req: express.Request, res: express.Response) => {

@@ -15,6 +15,14 @@ export async function fetchProducts(filters: { q?: string; category?: string; mi
   return res.json();
 }
 
+export async function fetchCategories() {
+  const res = await fetch(`${apiBase}/categories`, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error('Failed to fetch categories');
+  }
+  return res.json();
+}
+
 export async function fetchProductById(id: string) {
   const res = await fetch(`${apiBase}/products/${id}`, { cache: 'no-store' });
   if (!res.ok) {
@@ -32,6 +40,20 @@ export async function createProduct(product: { name: string; price: number; cate
 
   if (!res.ok) {
     throw new Error('Failed to create product');
+  }
+
+  return res.json();
+}
+
+export async function updateProduct(id: string, product: { name: string; price: number; category: string }) {
+  const res = await fetch(`${apiBase}/products/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(product),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update product');
   }
 
   return res.json();
