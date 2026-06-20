@@ -14,3 +14,7 @@ yarn-error.log*
 
 # Local report/reference file
 Informe de Hardware of Legends.pdf
+
+# SQLite databases (local development)
+*.db
+*.db-journal
