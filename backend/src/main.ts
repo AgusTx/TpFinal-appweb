@@ -1,6 +1,7 @@
 import express from 'express';
 import { register, login } from './controllers/auth.controller';
 import { circuitBreakers } from './patterns/circuitBreaker';
+import { jwtMiddleware } from './middleware/jwt.middleware';
 
 const app = express();
 app.use(express.json());
@@ -97,8 +98,9 @@ app.post('/products', async (req, res) => await proxyRequest(req, res, `${produc
 app.put('/products/:id', async (req, res) => await proxyRequest(req, res, `${productService}/products/${req.params.id}`, circuitBreakers.product));
 
 // Orders routes (forward to order service)
-app.get('/orders', async (req, res) => await proxyRequest(req, res, `${orderService}/orders`, circuitBreakers.order));
-app.post('/orders', async (req, res) => await proxyRequest(req, res, `${orderService}/orders`, circuitBreakers.order));
+// Protected by JWT validation middleware
+app.get('/orders', jwtMiddleware, async (req, res) => await proxyRequest(req, res, `${orderService}/orders`, circuitBreakers.order));
+app.post('/orders', jwtMiddleware, async (req, res) => await proxyRequest(req, res, `${orderService}/orders`, circuitBreakers.order));
 
 app.listen(process.env.PORT ? Number(process.env.PORT) : 4000, () => {
   console.log(`Backend gateway running on http://localhost:${process.env.PORT || 4000}`);
