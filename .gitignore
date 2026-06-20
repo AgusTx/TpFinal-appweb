@@ -11,3 +11,6 @@ yarn-error.log*
 
 # Editor
 .vscode/
+
+# Local report/reference file
+Informe de Hardware of Legends.pdf
